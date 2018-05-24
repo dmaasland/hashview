@@ -51,6 +51,12 @@ get '/settings' do
   # get hcbinpath (stored in config file vs db)
   @hc_binpath = JSON.parse(File.read('config/agent_config.json'))['hc_binary_path']
 
+  # get hcprecmd
+  @hc_precmd = JSON.parse(File.read('config/agent_config.json'))['hc_pre_cmd']
+
+  # get hcpostcmd
+  @hc_postcmd = JSON.parse(File.read('config/agent_config.json'))['hc_post_cmd']
+
   haml :global_settings
 end
 
@@ -149,14 +155,6 @@ post '/settings' do
     settings = Settings.first
     settings.ui_themes = params[:ui_themes] unless params[:ui_themes].nil? || params[:ui_themes].empty?
     settings.save
-
-  elsif params[:form_id] == '4' # Distributed settings
-    settings = Settings.first
-    # distributed settings
-    if params[:chunk_size]
-      settings.chunk_size = params[:chunk_size].to_i
-      settings.save
-    end
 
   elsif params[:form_id] == '5' # Hub
 
