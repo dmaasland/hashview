@@ -7,6 +7,7 @@ require 'mysql'
 require './helpers/email.rb'
 require './helpers/compute_task_keyspace.rb'
 require 'data_mapper'
+require 'openssl'
 
 require_relative 'jobs/init'
 # require_relative 'helpers/init'
@@ -613,7 +614,7 @@ def upgrade_to_v070(user, password, host, database)
       rule_file.name = name
       rule_file.path = path_file
       rule_file.size = 0
-      rule_file.checksum = Digest::SHA2.hexdigest(File.read(path_file))
+      rule_file.checksum = OpenSSL::Digest::SHA256.hexdigest(File.read(path_file))
       rule_file.save
 
     end
